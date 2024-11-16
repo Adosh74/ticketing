@@ -8,7 +8,14 @@ router.post('/api/users/signin',  [
     body('password').trim().isLength({ min: 4, max: 20}).withMessage('Password must be between 4 and 20 characters')
 
 ],
-(_req: Request, res: Response) =>{
+(req: Request, res: Response) =>{
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) 
+        res.status(400).send(errors.array());
+    
+    const { email, password } = req.body
+    
+
     res.send('Hi there!')
 })
 
