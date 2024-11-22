@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express from 'express'
 import {json } from 'body-parser'
 import { currentUserRouter } from './routes/current-user'
 import { signinRouter } from './routes/signin'
