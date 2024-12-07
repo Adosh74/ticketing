@@ -1,22 +1,46 @@
 import { Router, Request, Response } from 'express';
-import { body, validationResult } from 'express-validator'
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+
+import { validateRequest } from '../middlewares/validate-request';
+import { User } from '../models/user';
+import { BadRequestError } from '../errors/bad-request-error';
+import { Password } from '../services/password';
 
 const router = Router();
 
-router.post('/api/users/signin',  [
-    body('email').isEmail().withMessage('Email must be valid'),
-    body('password').trim().isLength({ min: 4, max: 20}).withMessage('Password must be between 4 and 20 characters')
+router.post(
+	'/api/users/signin',
+	[
+		body('email').isEmail().withMessage('Email must be valid'),
+		body('password').trim().notEmpty().withMessage('You must supply a password'),
+	],
+	validateRequest,
+	async (req: Request, res: Response) => {
+		const { email, password } = req.body;
 
-],
-(req: Request, res: Response) =>{
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) 
-        res.status(400).send(errors.array());
-    
-    const { email, password } = req.body
-    
+		const existingUser = await User.findOne({ email });
 
-    res.send('Hi there!')
-})
+		if (!existingUser) throw new BadRequestError('Invalid credentials');
 
-export{ router as signinRouter }
+		const passwordMatch = await Password.compare(existingUser.password, password);
+
+		if (!passwordMatch) throw new BadRequestError('Invalid credentials');
+
+		const userJwt = jwt.sign(
+			{
+				id: existingUser._id,
+				email: existingUser.email,
+			},
+			process.env.JWT_KEY!
+		);
+
+		req.session = {
+			jwt: userJwt,
+		};
+
+		res.status(200).send(existingUser);
+	}
+);
+
+export { router as signinRouter };
