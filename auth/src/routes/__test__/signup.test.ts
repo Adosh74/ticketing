@@ -61,7 +61,7 @@ it('Returns a 400 with missing email and password', async () => {
 	expect(response.body.errors?.length === 2);
 });
 
-it('Returns a 400 with email in use', async () => {
+it('Disallow duplicate emails', async () => {
 	await request(app)
 		.post('/api/users/signup')
 		.send({
@@ -78,15 +78,15 @@ it('Returns a 400 with email in use', async () => {
 	expect(response.body.errors[0]?.message === 'Email in use');
 });
 
-// it('Sets a cookie after successful signup', async () => {
-// 	const response = await request(app)
-// 		.post('/api/users/signup')
-// 		.send({
-// 			email: 'user@test.com',
-// 			password: 'password1234',
-// 		})
-// 		.expect(201);
-// 	console.log('response.body', response.body);
+it('Sets a cookie after successful signup', async () => {
+	const response = await request(app)
+		.post('/api/users/signup')
+		.send({
+			email: 'user@test.com',
+			password: 'password1234',
+		})
+		.expect(201);
+	console.log('response.body', response.body);
 
-// 	expect(response.get('Set-Cookie')).toBeDefined();
-// });
+	expect(response.get('Set-Cookie')).toBeDefined();
+});
