@@ -24,5 +24,5 @@ it('responds with details about current user', async () => {
 		.send({})
 		.expect(200);
 
-	expect(response.body.email).toEqual(data.email);
+	expect(response.body.currentUser.email).toEqual(data.email);
 });
