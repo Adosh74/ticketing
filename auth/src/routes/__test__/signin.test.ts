@@ -12,38 +12,22 @@ it('fails when a email does not exist is supplied', async () => {
 });
 
 it('fails when an incorrect password is supplied', async () => {
-	await request(app)
-		.post('/api/users/signup')
-		.send({
-			email: 'user@test.com',
-			password: 'password1234',
-		})
-		.expect(201);
-
+	const signupData = await signin();
 	await request(app)
 		.post('/api/users/signin')
 		.send({
-			email: 'test@test.com',
-			password: 'test1234',
+			email: signupData.user.email,
+			password: 'wrongPassword',
 		})
 		.expect(400);
 });
 
 it('response with cookie when send valid credentials', async () => {
-	const creationResponse = await request(app)
-		.post('/api/users/signup')
-		.send({
-			email: 'user@test.com',
-			password: 'password1234',
-		})
-		.expect(201);
+	const signupData = await signin();
 
 	const response = await request(app)
 		.post('/api/users/signin')
-		.send({
-			email: 'user@test.com',
-			password: 'password1234',
-		})
+		.send(signupData.user)
 		.expect(200);
 
 	expect(response.get('Set-Cookie')).toBeDefined();
