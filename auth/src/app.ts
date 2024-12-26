@@ -23,7 +23,9 @@ app.use(
 	})
 );
 
-app.use(requestLoggerMiddleware);
+if (process.env.NODE_ENV !== 'test') {
+	app.use(requestLoggerMiddleware);
+}
 
 app.use(healthCheckRouter);
 app.use(currentUserRouter);
