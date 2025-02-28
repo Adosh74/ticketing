@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { app } from './../../app';
+import { it, expect } from '@jest/globals';
 
 it('responds with details about current user', async () => {
 	const signinData = await signin();
