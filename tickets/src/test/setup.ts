@@ -1,5 +1,5 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import request from 'supertest';
 import { beforeAll, beforeEach, afterAll } from '@jest/globals';
 import jwt from 'jsonwebtoken';
@@ -43,7 +43,7 @@ afterAll(async () => {
 
 global.signin = () => {
 	const payload = {
-		id: '1las23lla',
+		id: new Types.ObjectId().toHexString(),
 		email: 'test@test.com',
 	};
 
