@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { app } from '../../app';
-import { it } from '@jest/globals';
+import { it, expect } from '@jest/globals';
 import { Types } from 'mongoose';
 
 it('Returns 404 if the ticket is not found', async () => {
