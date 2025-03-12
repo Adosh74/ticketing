@@ -11,6 +11,8 @@ import {
 } from '@mshebltickets/common';
 import { createTicketRouter } from './routes/new';
 import { showRouter } from './routes/show';
+import { indexTicketRouter } from './routes';
+import { updateTicketRouter } from './routes/update';
 
 const app = express();
 
@@ -27,6 +29,8 @@ app.use(currentUser);
 
 app.use(createTicketRouter);
 app.use(showRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 if (process.env.NODE_ENV !== 'test') {
 	app.use(requestLoggerMiddleware);
