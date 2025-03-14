@@ -31,3 +31,9 @@ skaffold dev
 - Open your browser and go to ticketing.dev
 
 > Type `thisisunsafe` to bypass the security warning
+
+- To forward port from kubernetes to your local machine
+
+```bash
+kubectl port-forward <pod-name> <local-port>:<pod-port>
+```
