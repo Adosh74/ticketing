@@ -3,6 +3,8 @@ import { app } from '../../app';
 import { it, expect } from '@jest/globals';
 import { Types } from 'mongoose';
 
+jest.mock('../../nats-wrapper.ts');
+
 it('Returns 404 if the ticket is not found', async () => {
 	const id = new Types.ObjectId().toHexString();
 	await request(app).get(`/api/tickets/${id}`).expect(404);
