@@ -8,6 +8,9 @@ import {
 	validateRequest,
 } from '@mshebltickets/common';
 
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-update-publisher';
+import { natsWrapper } from '../nats-wrapper';
+
 const router = Router();
 
 router.put(
@@ -33,6 +36,13 @@ router.put(
 		});
 
 		await ticket.save();
+
+		new TicketUpdatedPublisher(natsWrapper.client).publish({
+			id: ticket.id,
+			price: ticket.price,
+			title: ticket.title,
+			userId: ticket.userId,
+		});
 
 		res.send(ticket);
 	}
