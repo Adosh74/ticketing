@@ -3,8 +3,6 @@ import { app } from '../../app';
 import { expect, it } from '@jest/globals';
 import { Ticket } from '../../models/ticket';
 
-jest.mock('../../nats-wrapper.ts');
-
 it('has a route handler listening to /api/tickets for post requests', async () => {
 	const response = await request(app).post('/api/tickets').send({});
 
