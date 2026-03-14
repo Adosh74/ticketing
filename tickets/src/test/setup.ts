@@ -13,9 +13,6 @@ interface GlobalSigninOutput {
 		password: string;
 	};
 }
-declare global {
-	var signin: () => string[];
-}
 
 let mongo: MongoMemoryServer;
 
