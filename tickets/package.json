@@ -12,7 +12,15 @@
 		"testEnvironment": "node",
 		"setupFilesAfterEnv": [
 			"./src/test/setup.ts"
-		]
+		],
+		"transform": {
+			"^.+\\.ts$": [
+				"ts-jest",
+				{
+					"tsconfig": "tsconfig.test.json"
+				}
+			]
+		}
 	},
 	"keywords": [],
 	"author": "",
