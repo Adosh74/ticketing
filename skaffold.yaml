@@ -23,9 +23,17 @@ build:
       sync:
         manual:
           - src: 'src/**/*.ts'
-            dest: .s
+            dest: .
     - image: shebl74/client
       context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: shebl74/orders
+      context: orders
       docker:
         dockerfile: Dockerfile
       sync:
