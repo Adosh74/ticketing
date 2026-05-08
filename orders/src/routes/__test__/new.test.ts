@@ -5,6 +5,7 @@ import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 import { Order } from '../../models/order';
 import { OrderStatus } from '@mshebltickets/common';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('return an error if ticket does not exist', async () => {
 	const ticketId = new Types.ObjectId();
@@ -55,4 +56,19 @@ it('reserve a ticket', async () => {
 		.expect(201);
 });
 
-it.todo('emit order created event');
+it('emit order created event', async () => {
+	const ticket = Ticket.build({
+		price: 20,
+		title: 'aaa',
+	});
+
+	await ticket.save();
+
+	await request(app)
+		.post('/api/orders')
+		.set('Cookie', global.signin())
+		.send({ ticketId: ticket.id })
+		.expect(201);
+
+	expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
