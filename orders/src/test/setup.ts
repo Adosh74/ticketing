@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Types } from 'mongoose';
 import request from 'supertest';
-import { beforeAll, beforeEach, afterAll } from '@jest/globals';
+import { beforeAll, beforeEach, afterAll, jest } from '@jest/globals';
 import jwt from 'jsonwebtoken';
 
 import { app } from '../app';
