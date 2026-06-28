@@ -1,6 +1,7 @@
 import { Model, Schema, model, Document } from 'mongoose';
-import { Order } from './order';
 import { OrderStatus } from '@mshebltickets/common';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { Order } from './order';
 
 interface TicketAttrs {
 	id: string;
@@ -11,11 +12,13 @@ interface TicketAttrs {
 export interface TicketDoc extends Document {
 	title: string;
 	price: number;
+	version: number;
 	isReserved(): Promise<Boolean>;
 }
 
 interface TicketModel extends Model<TicketDoc> {
 	build(attrs: TicketAttrs): TicketDoc;
+	findByEvent(event: { id: string; version: number }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new Schema(
@@ -39,6 +42,16 @@ const ticketSchema = new Schema(
 		},
 	}
 );
+
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
+ticketSchema.statics.findByEvent = async (event: { id: string; version: number }) => {
+	return Ticket.findOne({
+		_id: event.id,
+		version: event.version - 1,
+	});
+};
 
 ticketSchema.statics.build = (attrs: TicketAttrs): TicketDoc => {
 	return new Ticket({
