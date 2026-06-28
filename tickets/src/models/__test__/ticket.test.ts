@@ -1,5 +1,5 @@
 import { Ticket } from '../ticket'
-import { it } from '@jest/globals';
+import { expect, it } from '@jest/globals';
 
 it('implements optimistic concurrency control', async () => {
 	const ticket = Ticket.build({
@@ -28,3 +28,20 @@ it('implements optimistic concurrency control', async () => {
 
 	throw new Error('Should not reach this point');
 });
+
+it('Increments the version number on multiple saves', async () => {
+	const ticket = Ticket.build({
+		title: 'Ti',
+		price: 12,
+		userId: 'asdas',
+	})
+
+	await ticket.save();
+	expect(ticket.version).toEqual(0);
+	
+	await ticket.save();
+	expect(ticket.version).toEqual(1);
+
+	await ticket.save();
+	expect(ticket.version).toEqual(2);
+})
